@@ -11,18 +11,19 @@ package WS_Discovery
 
 import (
 	"fmt"
-	"net"
-	"golang.org/x/net/ipv4"
-	"time"
 	"log"
-	"github.com/satori/go.uuid"
+	"net"
+	"time"
+
+	"golang.org/x/net/ipv4"
 )
 
-const bufSize  = 8192
+const bufSize = 8192
 
-func SendProbe(interfaceName string, scopes, types []string, namespaces map[string]string) []string{
+func SendProbe(interfaceName string, scopes, types []string, namespaces map[string]string) []string {
 	// Creating UUID Version 4
-	uuidV4 := uuid.Must(uuid.NewV4())
+	var err error
+	uuidV4 := uuid.Must(uuid.NewV4(), err)
 	//fmt.Printf("UUIDv4: %s\n", uuidV4)
 
 	probeSOAP := buildProbeMessage(uuidV4.String(), scopes, types, namespaces)
@@ -32,7 +33,7 @@ func SendProbe(interfaceName string, scopes, types []string, namespaces map[stri
 
 }
 
-func sendUDPMulticast (msg string, interfaceName string) []string {
+func sendUDPMulticast(msg string, interfaceName string) []string {
 	var result []string
 	data := []byte(msg)
 	iface, err := net.InterfaceByName(interfaceName)
